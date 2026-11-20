@@ -112,6 +112,8 @@ tools/
 - Branches: `feat/VINYL-12-short-description`, `fix/VINYL-30-…`, `chore/VINYL-…`.
 - Conventional commits referencing the issue: `feat(api): add collection CRUD [VINYL-22]`.
 - One PR per Jira issue where possible; the PR description links the issue and lists how each item of the Definition of Done was satisfied.
+- **No AI attribution:** commits and PRs never include `Co-Authored-By: Claude`, "Generated with Claude Code" or similar trailers or footers. This applies to humans, Claude Code and the agents in `tools/agents` alike; `.claude/settings.json` disables Claude Code's attribution for this repo.
+- This repo is public: commits use the GitHub noreply email, and no personal data (emails, private URLs) goes into tracked files.
 
 ### Scrum & estimation
 
