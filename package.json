@@ -1,0 +1,31 @@
+{
+  "name": "vinyl-collection",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Multi-user vinyl collection manager with Discogs integration (monorepo).",
+  "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10.9.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage",
+    "test:e2e": "turbo run test:e2e",
+    "audit": "npm audit --audit-level=high",
+    "validate": "turbo run lint typecheck test:coverage && npm run audit",
+    "clean": "turbo run clean && rm -rf node_modules .turbo"
+  },
+  "devDependencies": {
+    "turbo": "2.11.13"
+  }
+}
