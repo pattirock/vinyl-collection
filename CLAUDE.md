@@ -34,7 +34,10 @@ npm run format                     # Prettier --write on the whole repo
 npm run format:check               # Prettier --check (used by validate and CI)
 npm run audit                      # npm audit --audit-level=high
 npm run validate                   # format:check + lint + typecheck + coverage + audit (pre-PR gate)
+npm run agents -- VINYL-<n> --dry-run   # validate agent config for an issue (no Claude/Jira calls)
 ```
+
+Agents env: copy `tools/agents/.env.example` (Claude credentials are optional if an `ant auth` profile is active; Jira is required except with `--dry-run`).
 
 Single workspace: `npm run test -w @vinyl/api`, `npm run dev -w @vinyl/web`.
 Single test file: `npm run test -w @vinyl/api -- path/to/file.test.ts`.
