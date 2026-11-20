@@ -27,16 +27,18 @@ tools/      developer tooling (agents)
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `npm run dev` | Run every app in watch mode |
-| `npm run build` | Build every workspace (cached by Turborepo) |
-| `npm run lint` | Lint every workspace |
-| `npm run typecheck` | Type-check every workspace |
-| `npm run test` | Run unit/integration tests |
-| `npm run test:coverage` | Tests with coverage thresholds |
-| `npm run test:e2e` | Playwright end-to-end tests |
-| `npm run audit` | `npm audit` failing on high/critical issues |
-| `npm run validate` | Pre-PR gate: lint + typecheck + coverage + audit |
+| Script                  | What it does                                              |
+| ----------------------- | --------------------------------------------------------- |
+| `npm run dev`           | Run every app in watch mode                               |
+| `npm run build`         | Build every workspace (cached by Turborepo)               |
+| `npm run lint`          | Lint every workspace                                      |
+| `npm run typecheck`     | Type-check every workspace                                |
+| `npm run test`          | Run unit/integration tests                                |
+| `npm run test:coverage` | Tests with coverage thresholds                            |
+| `npm run test:e2e`      | Playwright end-to-end tests                               |
+| `npm run format`        | Format the repo with Prettier                             |
+| `npm run format:check`  | Check formatting (used by `validate`)                     |
+| `npm run audit`         | `npm audit` failing on high/critical issues               |
+| `npm run validate`      | Pre-PR gate: format + lint + typecheck + coverage + audit |
 
 Backlog: Jira project `VINYL`.

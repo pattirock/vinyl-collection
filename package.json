@@ -21,11 +21,16 @@
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "turbo run test:e2e",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "audit": "npm audit --audit-level=high",
-    "validate": "turbo run lint typecheck test:coverage && npm run audit",
+    "validate": "npm run format:check && turbo run lint typecheck test:coverage && npm run audit",
     "clean": "turbo run clean && rm -rf node_modules .turbo"
   },
   "devDependencies": {
-    "turbo": "2.11.13"
+    "eslint": "9.39.5",
+    "prettier": "3.10.1",
+    "turbo": "2.11.13",
+    "typescript": "6.0.3"
   }
 }

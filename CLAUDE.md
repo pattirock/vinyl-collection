@@ -7,14 +7,14 @@ Multi-user web app to manage a vinyl record collection, with Discogs integration
 
 ## Stack
 
-| Layer | Tech |
-|---|---|
+| Layer    | Tech                                                                                          |
+| -------- | --------------------------------------------------------------------------------------------- |
 | Frontend | Next.js (App Router, Turbopack) · React · TypeScript · TanStack React Query · React Hook Form |
-| Backend | Node.js · Express · TypeScript · Mongoose |
-| Database | MongoDB (Docker locally, Atlas in production) |
-| Shared | Zod schemas and types in `@vinyl/shared` |
-| Monorepo | npm workspaces · Turborepo |
-| Testing | Vitest · React Testing Library · MSW · Supertest · mongodb-memory-server · Playwright |
+| Backend  | Node.js · Express · TypeScript · Mongoose                                                     |
+| Database | MongoDB (Docker locally, Atlas in production)                                                 |
+| Shared   | Zod schemas and types in `@vinyl/shared`                                                      |
+| Monorepo | npm workspaces · Turborepo                                                                    |
+| Testing  | Vitest · React Testing Library · MSW · Supertest · mongodb-memory-server · Playwright         |
 
 ## Commands
 
@@ -30,12 +30,20 @@ npm run test                       # Vitest on all workspaces
 npm run test:coverage              # Vitest with coverage thresholds
 npm run test:e2e                   # Playwright (needs dev stack running)
 npm run build                      # production build of every app
+npm run format                     # Prettier --write on the whole repo
+npm run format:check               # Prettier --check (used by validate and CI)
 npm run audit                      # npm audit --audit-level=high
-npm run validate                   # lint + typecheck + test + audit (pre-PR gate)
+npm run validate                   # format:check + lint + typecheck + coverage + audit (pre-PR gate)
 ```
 
 Single workspace: `npm run test -w @vinyl/api`, `npm run dev -w @vinyl/web`.
-Single test file: `npx vitest run path/to/file.test.ts -w @vinyl/api`.
+Single test file: `npm run test -w @vinyl/api -- path/to/file.test.ts`.
+
+Shared config packages:
+
+- `@vinyl/tsconfig` — `base.json` (strict + `noUncheckedIndexedAccess`), `node.json`, `library.json`, `nextjs.json`.
+- `@vinyl/eslint-config` — `@vinyl/eslint-config/node` and `@vinyl/eslint-config/next` (flat configs with type-aware TypeScript, security, React/a11y/Next rules and Prettier compatibility).
+- Toolchain pins: TypeScript 6.0 (typescript-eslint does not support 7.x yet) and ESLint 9 (React/jsx-a11y plugins do not support 10 yet).
 
 ## Architecture
 
@@ -73,11 +81,13 @@ tools/
 ## Conventions
 
 ### TypeScript
+
 - `strict` + `noUncheckedIndexedAccess`. No `any`, no non-null `!` without a comment explaining why.
 - Types come from Zod (`z.infer`) — do not hand-write duplicate interfaces.
 - Named exports only (except Next.js route files that require default exports).
 
 ### Backend
+
 - Controllers handle HTTP only; business logic in services; Mongo access only in repositories.
 - Validate `body`, `params` and `query` with Zod middleware before reaching the controller.
 - Throw typed domain errors; the error middleware maps them to RFC 7807. Never leak stack traces or Mongo errors to clients.
@@ -85,6 +95,7 @@ tools/
 - Log with pino; never log passwords, tokens, cookies or full request bodies.
 
 ### Frontend
+
 - Server state lives in React Query; UI state in `useState`/URL search params. No global state library.
 - Query keys come from factories in `src/lib/queryKeys.ts`; never inline key arrays.
 - Mutations invalidate affected queries; use optimistic updates with rollback for edit/delete.
@@ -92,15 +103,18 @@ tools/
 - Accessibility first: semantic HTML, labelled controls, visible focus, keyboard navigation.
 
 ### Naming
+
 - Files: `kebab-case.ts`; React components: `PascalCase.tsx`; hooks: `useThing.ts`.
 - Tests next to the code: `thing.test.ts` / `Thing.test.tsx`; E2E in `apps/web/e2e/`.
 
 ### Git & Jira
+
 - Branches: `feat/VINYL-12-short-description`, `fix/VINYL-30-…`, `chore/VINYL-…`.
 - Conventional commits referencing the issue: `feat(api): add collection CRUD [VINYL-22]`.
 - One PR per Jira issue where possible; the PR description links the issue and lists how each item of the Definition of Done was satisfied.
 
 ### Scrum & estimation
+
 - Work is planned in Scrum sprints on the Jira `VINYL` board.
 - Stories and tasks are estimated in **story points using Fibonacci**: 1, 2, 3, 5, 8, 13. Epics are not estimated.
 - Anything above 8 must be split before it enters a sprint; 13 means "too big or too uncertain — refine it".
@@ -111,6 +125,7 @@ tools/
 A change is **not done** unless all three sections below are satisfied. If any item cannot be met, stop and explain why instead of skipping it.
 
 ### 1. Tests
+
 - New or changed behaviour is covered by tests **in the same change**: unit tests for services/hooks/utils, integration tests (Supertest + mongodb-memory-server) for endpoints, RTL + MSW tests for components.
 - Bug fixes include a regression test that fails without the fix.
 - Test behaviour, not implementation: query by role/label in RTL; assert on HTTP responses, not internals.
@@ -118,7 +133,9 @@ A change is **not done** unless all three sections below are satisfied. If any i
 - `npm run validate` passes locally before committing.
 
 ### 2. Security review
+
 Check every item that applies to the change:
+
 - [ ] All external input (body, params, query, headers, Discogs responses) validated with Zod.
 - [ ] Endpoints touching user data require auth and filter by `ownerId`; a test proves another user gets 404.
 - [ ] No NoSQL injection: never pass raw request objects into Mongo filters; no `$where`; build queries from validated fields only.
@@ -129,7 +146,9 @@ Check every item that applies to the change:
 - [ ] New dependencies: justified, maintained, and `npm audit` reports no high/critical issues.
 
 ### 3. Performance review
+
 Check every item that applies to the change:
+
 - [ ] Every new query pattern is backed by an index; verify with `explain()` when in doubt.
 - [ ] Lists are paginated (cursor-based); no unbounded queries or N+1 loops.
 - [ ] Read queries use `.lean()` and field projection.

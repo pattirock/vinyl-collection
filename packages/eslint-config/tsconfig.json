@@ -1,0 +1,10 @@
+{
+  "extends": "@vinyl/tsconfig/node.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true
+  },
+  "include": ["*.js", "test/**/*.js"],
+  "exclude": ["test/fixtures"]
+}
